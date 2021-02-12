@@ -5,7 +5,7 @@ name: Build and test env-utils
 
 jobs:
     build_and_test:
-        name: Deploy formextract stack
+        name: build and test
         runs-on: [ubuntu-latest]
         timeout-minutes: 15
 
