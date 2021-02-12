@@ -26,7 +26,7 @@ jobs:
             # need to make sure that we package the node modules with the lambdas
             echo "building package"
             go install .
-            go build .
+            go build
             echo "package built"
             echo "running go tests"
             go test -v ./...
