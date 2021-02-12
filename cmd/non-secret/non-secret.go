@@ -65,12 +65,12 @@ var PopulateNonSecretsCMD = &cobra.Command{
 			}
 			nonSecretFile, err := os.Create(output)
 			if err != nil {
-				logrus.Fatal(errors.Wrap(err, "while creating secret env persist file"))
+				logrus.Fatal(errors.Wrap(err, "while creating env persist file"))
 			}
 			_, err = nonSecretFile.WriteString(persistString)
 
 			if err != nil {
-				logrus.Fatal(errors.Wrapf(err, "while writing to secret env persist file"))
+				logrus.Fatal(errors.Wrapf(err, "while writing to env persist file"))
 			}
 		}
 
