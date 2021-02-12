@@ -32,5 +32,6 @@ jobs:
             go test -v ./...
             echo "testing command line functionality"
             ./env-utils secret populate "sample/secret.jsonc" -r "us-east-2"
-            ./diff_test.sh .secret_env sample/.secret_env
+            ./diff_test.sh .secret_env sample/.non_secret_env
+            echo "finished testing command line aws functionality"
             
