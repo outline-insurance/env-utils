@@ -12,9 +12,9 @@ you should then be able to call the command with `env-utils`
 ## Example Usage
 There are currently 2 main ways to use this command line tool:
 ```
-env-utils non-secret "sample/non-secret.jsonc"
+env-utils non-secret populate "sample/non-secret.jsonc"
 
-env-utils secret "sample/secret.jsonc"
+env-utils secret populate "sample/secret.jsonc"
 ```
 Both of which populate env vars based on the contents of the jsonc files provided.
 They both share the following flags:
