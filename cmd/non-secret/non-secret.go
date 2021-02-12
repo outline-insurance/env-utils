@@ -48,6 +48,9 @@ var PopulateNonSecretsCMD = &cobra.Command{
 		}
 
 		persist, err := cmd.Flags().GetBool("persist")
+		if err != nil {
+			logrus.Fatal(errors.Wrap(err, "while getting persist flag value"))
+		}
 		persistString := ""
 		for name, value := range *envMap {
 			err = os.Setenv(name, value)
