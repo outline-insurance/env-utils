@@ -6,7 +6,7 @@ name: Build and test env-utils
 jobs:
     build_and_test:
         name: build and test
-        runs-on: [ubuntu-latest]
+        runs-on: [ubuntu-18.04]
         timeout-minutes: 15
 
         steps:
@@ -41,4 +41,3 @@ jobs:
             ./diff_test.sh .non_secret_env sample/.non_secret_env 
 
             echo "finished testing command line functionality"
-            
