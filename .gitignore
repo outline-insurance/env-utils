@@ -16,3 +16,5 @@
 
 .secret_env
 .non_secret_env
+!sample/*
+env-utils

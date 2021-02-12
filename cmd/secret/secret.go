@@ -22,8 +22,16 @@ func init() {
 		PopulateSecretsCMD,
 	)
 	var Region string
+	var OutputFile string
 	SecretsCmd.PersistentFlags().StringVarP(&Region, "region", "r", "us-east-1", "AWS region (required)")
 	SecretsCmd.MarkFlagRequired("region")
+	SecretsCmd.PersistentFlags().StringVarP(
+		&OutputFile,
+		"output-file",
+		"o",
+		".secret_env",
+		"name and path to output file, defaults to current working directory",
+	)
 }
 
 // PopulateSecretsCMD populates env secrets.
@@ -47,6 +55,9 @@ var PopulateSecretsCMD = &cobra.Command{
 			logrus.Fatal(errors.Wrap(err, "while getting region flag value"))
 		}
 		persist, err := cmd.Flags().GetBool("persist")
+		if err != nil {
+			logrus.Fatal(errors.Wrap(err, "while getting persist flag value"))
+		}
 		persistString := ""
 		for name, value := range *envMap {
 			secret, err := utils.GetSecret(value, region)
@@ -62,7 +73,11 @@ var PopulateSecretsCMD = &cobra.Command{
 			}
 		}
 		if persist {
-			secretFile, err := os.Create(".secret_env")
+			output, err := cmd.Flags().GetString("output-file")
+			if err != nil {
+				logrus.Fatal(errors.Wrap(err, "while getting output file flag value"))
+			}
+			secretFile, err := os.Create(output)
 			if err != nil {
 				logrus.Fatal(errors.Wrap(err, "while creating secret env persist file"))
 			}

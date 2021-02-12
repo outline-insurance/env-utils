@@ -11,10 +11,6 @@ import (
 
 // GetSecret retrieves the value of the secret ARN given
 func GetSecret(secretARN string, region string) (*string, error) {
-	//secretName := "dev/TEST_SECRET_FOR_TESTING"
-	//region := "us-east-2"
-
-	//Create a Secrets Manager client
 	svc := secretsmanager.New(session.New(),
 		aws.NewConfig().WithRegion(region))
 

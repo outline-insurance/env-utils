@@ -21,6 +21,14 @@ func init() {
 	NonSecretsCmd.AddCommand(
 		PopulateNonSecretsCMD,
 	)
+	var OutputFile string
+	NonSecretsCmd.PersistentFlags().StringVarP(
+		&OutputFile,
+		"output-file",
+		"o",
+		".non_secret_env",
+		"name and path to output file, defaults to current working directory",
+	)
 }
 
 // PopulateNonSecretsCMD populates env secrets.
@@ -40,6 +48,9 @@ var PopulateNonSecretsCMD = &cobra.Command{
 		}
 
 		persist, err := cmd.Flags().GetBool("persist")
+		if err != nil {
+			logrus.Fatal(errors.Wrap(err, "while getting persist flag value"))
+		}
 		persistString := ""
 		for name, value := range *envMap {
 			err = os.Setenv(name, value)
@@ -51,14 +62,18 @@ var PopulateNonSecretsCMD = &cobra.Command{
 			}
 		}
 		if persist {
-			secretFile, err := os.Create(".non_secret_env")
+			output, err := cmd.Flags().GetString("output-file")
 			if err != nil {
-				logrus.Fatal(errors.Wrap(err, "while creating secret env persist file"))
+				logrus.Fatal(errors.Wrap(err, "while getting output file flag value"))
 			}
-			_, err = secretFile.WriteString(persistString)
+			nonSecretFile, err := os.Create(output)
+			if err != nil {
+				logrus.Fatal(errors.Wrap(err, "while creating env persist file"))
+			}
+			_, err = nonSecretFile.WriteString(persistString)
 
 			if err != nil {
-				logrus.Fatal(errors.Wrapf(err, "while writing to secret env persist file"))
+				logrus.Fatal(errors.Wrapf(err, "while writing to env persist file"))
 			}
 		}
 
