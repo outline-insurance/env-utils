@@ -29,7 +29,7 @@ jobs:
             echo "package built"
             echo "running go tests"
             go test -v ./...
-            "echo testing command line fucntionality"
+            echo "testing command line functionality"
             env-utils secret populate "sample/secret.jsonc" -r "us-east-2"
             ./diff_test.sh .secret_env sample/.secret_env
             
