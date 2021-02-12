@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	nonsecret "github.com/outline-insurance/env-utils/cmd/non-secret"
+	secret "github.com/outline-insurance/env-utils/cmd/secret"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -8,7 +10,7 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "env-utils",
-	Short: "The Pathpoint eXchange Sonic Screwdriver",
+	Short: "Stuff for Pathpoint Environments",
 	Long:  `Utility code for the pathpoint environment repository.`,
 }
 
@@ -22,16 +24,11 @@ func Execute() {
 
 func init() {
 	// Add sub-command pacakges
-	// rootCmd.AddCommand(
-	// 	lambdoos.LambdoosCmd,
-	// 	reviewapps.ReviewAppCmd,
-	// 	util.UtilAppCmd,
-	// 	serve.ServeCmd,
-	// 	coverletter.CoverLetterCmd,
-	// 	eavcmd.EAVCmdRoot,
-	// 	hitbox.HitboxCmdRoot,
-	// 	docgen.GdocCmd,
-	// 	docgen.QuoteDocCmd,
-	// )
+	rootCmd.AddCommand(
+		secret.SecretsCmd,
+		nonsecret.NonSecretsCmd,
+	)
 
+	var Persist bool
+	rootCmd.PersistentFlags().BoolVarP(&Persist, "persist", "p", true, "persist secrets or variables to an env file?")
 }
