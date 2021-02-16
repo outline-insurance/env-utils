@@ -1,5 +1,5 @@
 on:
-    pull_request:
+    pull_request
   
 name: Build and test env-utils
 
@@ -20,8 +20,18 @@ jobs:
             aws-access-key-id: ${{ secrets.DEV_AWS_ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}
             aws-region: us-east-2
+        
+        - name: Login to Amazon ECR
+          id: login-ecr
+          # From: https://github.com/aws-actions/amazon-ecr-login
+          uses: aws-actions/amazon-ecr-login@v1
 
         - name: Build and Test 
+          env:
+            # https://help.github.com/en/actions/automating-your-workflow-with-github-actions/contexts-and-expression-syntax-for-github-actions#contexts
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            ECR_REPOSITORY: outline-app-base-slim
+            IMAGE_TAG: latest
           run: |
             # need to make sure that we package the node modules with the lambdas
             echo "building package"
@@ -41,3 +51,22 @@ jobs:
             ./diff_test.sh .non_secret_env sample/.non_secret_env 
 
             echo "finished testing command line functionality"
+
+            echo "building for debian-based release"
+            rm env-utils
+            export DIRECTORY=$(pwd)
+            docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+            docker run -v $DIRECTORY:/tmp $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG /bin/bash /tmp/build-entrypoint.sh
+            echo "finished building for debian-based release"
+        
+        - name: Binary Release
+          # From: https://github.com/marketplace/actions/automatic-releases
+          uses: "marvinpinto/action-automatic-releases@latest"
+          with:
+            repo_token: "${{ secrets.GITHUB_TOKEN }}"
+            automatic_release_tag: ${{ github.sha }}
+            prerelease: true
+            title: "Debian Binary"
+            files: |
+              LICENSE
+              env-utils
