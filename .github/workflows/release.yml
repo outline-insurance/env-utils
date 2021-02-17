@@ -60,6 +60,7 @@ jobs:
           with:
             repo_token: "${{ secrets.GITHUB_TOKEN }}"
             automatic_release_tag: ${{ steps.build.outputs.tag }}
+            prerelease: false 
             title: ${{ steps.build.outputs.tag }}
             files: |
               env-utils
