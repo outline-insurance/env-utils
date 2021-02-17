@@ -1,5 +1,8 @@
 on:
-    pull_request
+  push:
+    branches:
+      - production
+  pull_request
   
 name: Build and test env-utils
 
@@ -26,12 +29,14 @@ jobs:
           # From: https://github.com/aws-actions/amazon-ecr-login
           uses: aws-actions/amazon-ecr-login@v1
 
-        - name: Build and Test 
+        - name: Build and Test
+          id: build 
           env:
             # https://help.github.com/en/actions/automating-your-workflow-with-github-actions/contexts-and-expression-syntax-for-github-actions#contexts
             ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
             ECR_REPOSITORY: outline-app-base-slim
             IMAGE_TAG: latest
+            GIT_SHA: ${{ github.sha }}
           run: |
             # need to make sure that we package the node modules with the lambdas
             echo "building package"
@@ -58,15 +63,31 @@ jobs:
             docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
             docker run -v $DIRECTORY:/volume $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG /bin/bash /volume/build-entrypoint.sh
             echo "finished building for debian-based release"
+
+            export TAG=$($GIT_SHA | cut -c 1-8)
+            export VERSION=$(cat version.txt)
+            echo $TAG
+
+            echo "::set-output name=tag::$VERSION-$TAG"
         
-        - name: Binary Release
+        - name: Binary Release Test
           # From: https://github.com/marketplace/actions/automatic-releases
           uses: "marvinpinto/action-automatic-releases@latest"
           with:
             repo_token: "${{ secrets.GITHUB_TOKEN }}"
-            automatic_release_tag: latest
+            automatic_release_tag: ${{ steps.build.outputs.tag }}
             prerelease: true
-            title: "Debian Binary"
+            title: "Test Branch Release"
             files: |
-              LICENSE
+              env-utils
+        
+        - name: Production Binary Release
+          if: github.ref == 'refs/heads/production'
+          # From: https://github.com/marketplace/actions/automatic-releases
+          uses: "marvinpinto/action-automatic-releases@latest"
+          with:
+            repo_token: "${{ secrets.GITHUB_TOKEN }}"
+            automatic_release_tag: ${{ steps.build.outputs.tag }}
+            title: ${{ steps.build.outputs.tag }}
+            files: |
               env-utils
