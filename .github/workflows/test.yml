@@ -56,7 +56,7 @@ jobs:
             rm env-utils
             export DIRECTORY=$(pwd)
             docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-            docker run -v $DIRECTORY:/tmp $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG /bin/bash /tmp/build-entrypoint.sh
+            docker run -v $DIRECTORY:/volume $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG /bin/bash /tmp/build-entrypoint.sh
             echo "finished building for debian-based release"
         
         - name: Binary Release
