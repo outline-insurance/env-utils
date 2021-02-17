@@ -10,4 +10,5 @@ mv go /usr/local
 export PATH=$PATH:/usr/local/go/bin
 
 cd /tmp
+export GO111MODULE="on"
 go build 
