@@ -28,7 +28,7 @@ jobs:
           # From: https://github.com/aws-actions/amazon-ecr-login
           uses: aws-actions/amazon-ecr-login@v1
 
-        - name: Build
+        - name: Build and Test
           id: build 
           env:
             # https://help.github.com/en/actions/automating-your-workflow-with-github-actions/contexts-and-expression-syntax-for-github-actions#contexts
