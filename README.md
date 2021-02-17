@@ -1,6 +1,9 @@
 # env-utils
 For all your environment and secret needs
 
+## Deployments
+On each merge to `production` a new version is auto deployed and released. make sure to update the file `version.txt`!
+
 ## To Build
 From the top level directory run 
 ```
