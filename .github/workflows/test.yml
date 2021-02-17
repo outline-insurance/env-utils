@@ -14,6 +14,12 @@ jobs:
           # From: https://github.com/actions/checkout
           uses: actions/checkout@v2
         
+        - name: Checkout Production
+          # From: https://github.com/actions/checkout
+          uses: actions/checkout@v2
+          ref: production
+          path: production
+        
         - name: Configure DEV AWS credentials
           uses: aws-actions/configure-aws-credentials@v1
           with:
@@ -53,6 +59,9 @@ jobs:
             ./diff_test.sh .non_secret_env sample/.non_secret_env 
 
             echo "finished testing command line functionality"
+
+            echo "testing that version file is updated"
+            ./version.sh version.txt production/version.txt
 
             echo "test building for debian-based release"
             rm env-utils
