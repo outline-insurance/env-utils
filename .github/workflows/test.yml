@@ -66,14 +66,3 @@ jobs:
             echo $TAG
 
             echo "::set-output name=tag::$VERSION-$TAG"
-        
-        - name: Binary Release Test
-          # From: https://github.com/marketplace/actions/automatic-releases
-          uses: "marvinpinto/action-automatic-releases@latest"
-          with:
-            repo_token: "${{ secrets.GITHUB_TOKEN }}"
-            automatic_release_tag: ${{ steps.build.outputs.tag }}
-            prerelease: true
-            title: "Test Branch Release"
-            files: |
-              env-utils
