@@ -17,8 +17,9 @@ jobs:
         - name: Checkout Production
           # From: https://github.com/actions/checkout
           uses: actions/checkout@v2
-          ref: production
-          path: production
+          with:
+            ref: production
+            path: production
         
         - name: Configure DEV AWS credentials
           uses: aws-actions/configure-aws-credentials@v1
