@@ -1,5 +1,7 @@
 on:
-  pull_request
+  push:
+    branches:
+      - production
   
 name: Build and test env-utils
 
@@ -26,7 +28,7 @@ jobs:
           # From: https://github.com/aws-actions/amazon-ecr-login
           uses: aws-actions/amazon-ecr-login@v1
 
-        - name: Build and Test
+        - name: Build
           id: build 
           env:
             # https://help.github.com/en/actions/automating-your-workflow-with-github-actions/contexts-and-expression-syntax-for-github-actions#contexts
@@ -36,23 +38,9 @@ jobs:
             GIT_SHA: ${{ github.sha }}
           run: |
             # need to make sure that we package the node modules with the lambdas
-            echo "building package"
+            echo "installing package"
             go install .
-            go build
-            echo "package built"
-            echo "running go tests"
-            go test -v ./...
-            echo "testing command line functionality"
-
-            # Test secret functionality.
-            ./env-utils secret populate "sample/secret.jsonc" -r "us-east-2"
-            ./diff_test.sh .secret_env sample/.secret_env
-
-            # Test non-secret functionality.
-            ./env-utils non-secret populate "sample/non-secret.jsonc"
-            ./diff_test.sh .non_secret_env sample/.non_secret_env 
-
-            echo "finished testing command line functionality"
+            echo "package installed"
 
             echo "building for debian-based release"
             rm env-utils
@@ -61,19 +49,18 @@ jobs:
             docker run -v $DIRECTORY:/volume $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG /bin/bash /volume/build-entrypoint.sh
             echo "finished building for debian-based release"
 
-            export TAG=$(echo $GIT_SHA | cut -c 1-8)
+            export TAG=$( echo $GIT_SHA | cut -c 1-8 )
             export VERSION=$(cat version.txt)
-            echo $TAG
 
             echo "::set-output name=tag::$VERSION-$TAG"
         
-        - name: Binary Release Test
+        - name: Production Binary Release
+          if: github.ref == 'refs/heads/production'
           # From: https://github.com/marketplace/actions/automatic-releases
           uses: "marvinpinto/action-automatic-releases@latest"
           with:
             repo_token: "${{ secrets.GITHUB_TOKEN }}"
             automatic_release_tag: ${{ steps.build.outputs.tag }}
-            prerelease: true
-            title: "Test Branch Release"
+            title: ${{ steps.build.outputs.tag }}
             files: |
               env-utils
