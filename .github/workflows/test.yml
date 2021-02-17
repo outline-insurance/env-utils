@@ -54,15 +54,10 @@ jobs:
 
             echo "finished testing command line functionality"
 
-            echo "building for debian-based release"
+            echo "test building for debian-based release"
             rm env-utils
             export DIRECTORY=$(pwd)
             docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
             docker run -v $DIRECTORY:/volume $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG /bin/bash /volume/build-entrypoint.sh
             echo "finished building for debian-based release"
 
-            export TAG=$(echo $GIT_SHA | cut -c 1-8)
-            export VERSION=$(cat version.txt)
-            echo $TAG
-
-            echo "::set-output name=tag::$VERSION-$TAG"
