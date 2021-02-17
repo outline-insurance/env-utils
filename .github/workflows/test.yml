@@ -61,7 +61,7 @@ jobs:
             docker run -v $DIRECTORY:/volume $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG /bin/bash /volume/build-entrypoint.sh
             echo "finished building for debian-based release"
 
-            export TAG=$($GIT_SHA | cut -c 1-8)
+            export TAG=$(echo $GIT_SHA | cut -c 1-8)
             export VERSION=$(cat version.txt)
             echo $TAG
 

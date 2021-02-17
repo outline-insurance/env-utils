@@ -10,5 +10,4 @@ mv go /usr/local
 export PATH=$PATH:/usr/local/go/bin
 
 cd /volume
-ls -la
 go build 
