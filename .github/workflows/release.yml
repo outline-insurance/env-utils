@@ -3,7 +3,7 @@ on:
     branches:
       - production
   
-name: Build and test env-utils
+name: Build and Release env-utils
 
 jobs:
     build_and_test:
@@ -43,7 +43,6 @@ jobs:
             echo "package installed"
 
             echo "building for debian-based release"
-            rm env-utils
             export DIRECTORY=$(pwd)
             docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
             docker run -v $DIRECTORY:/volume $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG /bin/bash /volume/build-entrypoint.sh
