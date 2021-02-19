@@ -58,7 +58,7 @@ var PopulateNonSecretsCMD = &cobra.Command{
 				logrus.Fatal(errors.Wrapf(err, "while setting envirionment varable with name %s", name))
 			}
 			if persist {
-				persistString = fmt.Sprintf("%sexport %s=%s\n", persistString, name, value)
+				persistString = fmt.Sprintf("%sexport %s='%s'\n", persistString, name, value)
 			}
 		}
 		if persist {
