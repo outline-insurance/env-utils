@@ -7,12 +7,11 @@
 ## Steps to Reproduce the Problem
 
   1.
-  1.
-  1.
+  2.
+  3.
 
 ## Specifications
 
   - Version:
   - Platform:
   - Subsystem:
-  
