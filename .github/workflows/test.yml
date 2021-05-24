@@ -71,3 +71,12 @@ jobs:
             docker run -v $DIRECTORY:/volume $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG /bin/bash /volume/build-entrypoint.sh
             echo "finished building for debian-based release"
 
+            echo "test building for cypress-based release"
+            rm env-utils
+            export DIRECTORY=$(pwd)
+            docker pull cypress/included:3.2.0
+            docker run -v $DIRECTORY:/volume cypress/included:3.2.0 /bin/bash /volume/build-entrypoint.sh
+            echo "finished building for cypress-based release"
+
+            
+

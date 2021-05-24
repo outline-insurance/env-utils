@@ -57,6 +57,13 @@ jobs:
             echo "finished testing command line functionality"
             rm env-utils
 
+            echo "building for cypress-based release"
+            export DIRECTORY=$(pwd)
+            docker pull cypress/included:3.2.0
+            docker run -v $DIRECTORY:/volume cypress/included:3.2.0 /bin/bash /volume/build-entrypoint.sh
+            mv env-utils env-utils-cypress
+            echo "finished building for cypress-based release"
+
             echo "building for debian-based release"
             export DIRECTORY=$(pwd)
             docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -78,3 +85,4 @@ jobs:
             title: ${{ steps.build.outputs.tag }}
             files: |
               env-utils
+              env-utils-cypress
