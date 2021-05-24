@@ -60,7 +60,7 @@ jobs:
             echo "building for cypress-based release"
             export DIRECTORY=$(pwd)
             docker pull cypress/included:3.2.0
-            docker run -v $DIRECTORY:/volume cypress/included:3.2.0 --entrypoint /bin/bash /volume/build-entrypoint.sh
+            docker run -v $DIRECTORY:/volume --entrypoint /volume/build-entrypoint.sh cypress/included:3.2.0
             mv env-utils env-utils-cypress
             echo "finished building for cypress-based release"
 
