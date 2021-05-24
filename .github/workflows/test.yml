@@ -54,15 +54,16 @@ jobs:
             # Test secret functionality.
             ./env-utils secret populate "sample/secret.jsonc" -r "us-east-2"
             ./diff_test.sh .secret_env sample/.secret_env
+            
             ./env-utils secret populate -l "sample/secret.jsonc" -r "us-east-2"
-            ./diff_test.sh .secret_env_local sample/.secret_env            
+            ./diff_test.sh .secret_env sample/.secret_env_local
 
             # Test non-secret functionality.
             ./env-utils non-secret populate "sample/non-secret.jsonc"
             ./diff_test.sh .non_secret_env sample/.non_secret_env
             
             ./env-utils non-secret populate -l "sample/non-secret.jsonc"
-            ./diff_test.sh .non_secret_env_local sample/.non_secret_env
+            ./diff_test.sh .non_secret_env sample/.non_secret_env_local
 
             echo "finished testing command line functionality"
 
