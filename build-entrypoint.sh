@@ -1,3 +1,4 @@
+#!/bin/bash
 apt install curl -y
 
 curl -O https://dl.google.com/go/go1.14.linux-amd64.tar.gz
