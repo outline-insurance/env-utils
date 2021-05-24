@@ -75,7 +75,7 @@ jobs:
             rm env-utils
             export DIRECTORY=$(pwd)
             docker pull cypress/included:3.2.0
-            docker run -v $DIRECTORY:/volume cypress/included:3.2.0 /bin/bash /volume/build-entrypoint.sh
+            docker run -v $DIRECTORY:/volume cypress/included:3.2.0 --entrypoint /bin/bash /volume/build-entrypoint.sh
             echo "finished building for cypress-based release"
 
             
