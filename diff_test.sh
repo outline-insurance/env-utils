@@ -1,3 +1,6 @@
+#!/bin/bash
+set -eo pipefail
+
 diff $1 $2
 rv=$?  
 if [[ $rv == 1 ]]  

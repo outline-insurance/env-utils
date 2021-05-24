@@ -30,5 +30,7 @@ func init() {
 	)
 
 	var Persist bool
+	var LocalDevFormat bool
 	rootCmd.PersistentFlags().BoolVarP(&Persist, "persist", "p", true, "persist secrets or variables to an env file?")
+	rootCmd.PersistentFlags().BoolVarP(&LocalDevFormat, "local-dev-format", "l", false, "format env file to work for local dev?")
 }
