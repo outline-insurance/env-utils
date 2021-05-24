@@ -1,3 +1,4 @@
+#!/bin/bash
 diff $1 $2
 rv=$?  
 if [[ $rv == 1 ]]  
