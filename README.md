@@ -1,6 +1,5 @@
 # env-utils
-For all your environment and secret needs
-[![Go Reference](https://pkg.go.dev/badge/github.com/outline-insurance/env-utils.svg)](https://pkg.go.dev/github.com/outline-insurance/env-utils)
+[![Go Reference](https://pkg.go.dev/badge/github.com/outline-insurance/env-utils.svg)](https://pkg.go.dev/github.com/outline-insurance/env-utils) For all your environment and secret needs
 
 ## Deployments
 On each merge to `production` a new version is auto deployed and released. make sure to update the file `version.txt`!
