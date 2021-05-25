@@ -24,7 +24,7 @@ Both of which populate env vars based on the contents of the jsonc files provide
 They both share the following flags:
 
 * `-p` or `-persist` which defaults to `true` and causes the program to write out the env vars to a file named `.secret_env` or `.non_secret_env` in the same directory as the command was called from
-* `-l` or `-local-dev-format` which defaults to `false` and makes the persist file write itsself in a format that works with pathpoint's local dev setup
+* `-l` or `-local-dev-format` which defaults to `false` and makes the persist file write itself in a format that works with pathpoint's local dev setup
 * `-o` or `-output` lets you rename the output file and place it anywhere you want
 
 the `secret` command also has the flag `-r` or `-region` which defaults to `us-east-1` and sets the appropriate AWS region.
