@@ -58,6 +58,10 @@ var PopulateSecretsCMD = &cobra.Command{
 		if err != nil {
 			logrus.Fatal(errors.Wrap(err, "while getting persist flag value"))
 		}
+		localDevFormat, err := cmd.Flags().GetBool("local-dev-format")
+		if err != nil {
+			logrus.Fatal(errors.Wrap(err, "while getting local-dev-format flag value"))
+		}
 		persistString := ""
 		for name, value := range *envMap {
 			secret, err := utils.GetSecret(value, region)
@@ -69,7 +73,11 @@ var PopulateSecretsCMD = &cobra.Command{
 				logrus.Fatal(errors.Wrapf(err, "while setting envirionment varable with name %s", name))
 			}
 			if persist {
-				persistString = fmt.Sprintf("%sexport %s='%s'\n", persistString, name, *secret)
+				if localDevFormat {
+					persistString = fmt.Sprintf("%s%s='%s'\n", persistString, name, *secret)
+				} else {
+					persistString = fmt.Sprintf("%sexport %s='%s'\n", persistString, name, *secret)
+				}
 			}
 		}
 		if persist {
