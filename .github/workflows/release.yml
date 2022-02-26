@@ -34,7 +34,8 @@ jobs:
             # https://help.github.com/en/actions/automating-your-workflow-with-github-actions/contexts-and-expression-syntax-for-github-actions#contexts
             ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
             ECR_REPOSITORY: outline-app-base-slim
-            IMAGE_TAG: latest
+            # TODO: @gbooth27: change this back to latest once we release go for real on outline2.0 
+            IMAGE_TAG: test
           run: |
             # need to make sure that we package the node modules with the lambdas
             echo "installing package"
