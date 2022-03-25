@@ -39,7 +39,7 @@ jobs:
             # https://help.github.com/en/actions/automating-your-workflow-with-github-actions/contexts-and-expression-syntax-for-github-actions#contexts
             ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
             ECR_REPOSITORY: outline-app-base-slim
-            IMAGE_TAG: latest
+            IMAGE_TAG: latest-16
             GIT_SHA: ${{ github.sha }}
           run: |
             # need to make sure that we package the node modules with the lambdas
@@ -80,7 +80,7 @@ jobs:
             echo "test building for cypress-based release"
             rm env-utils
             export DIRECTORY=$(pwd)
-            docker pull cypress/included:7.5.0
+            docker pull cypress/included:9.5.2
             docker run -v $DIRECTORY:/volume --entrypoint /volume/build-entrypoint.sh cypress/included:7.5.0
             echo "finished building for cypress-based release"
 
