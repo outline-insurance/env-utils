@@ -35,7 +35,7 @@ jobs:
             ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
             ECR_REPOSITORY: outline-app-base-slim
             # TODO: @gbooth27: change this back to latest once we release go for real on outline2.0 
-            IMAGE_TAG: test
+            IMAGE_TAG: latest-16
           run: |
             # need to make sure that we package the node modules with the lambdas
             echo "installing package"
@@ -66,8 +66,8 @@ jobs:
 
             echo "building for cypress-based release"
             export DIRECTORY=$(pwd)
-            docker pull cypress/included:7.5.0
-            docker run -v $DIRECTORY:/volume --entrypoint /volume/build-entrypoint.sh cypress/included:7.5.0
+            docker pull cypress/included:9.5.2
+            docker run -v $DIRECTORY:/volume --entrypoint /volume/build-entrypoint.sh cypress/included:9.5.2
             mv env-utils env-utils-cypress
             echo "finished building for cypress-based release"
 
