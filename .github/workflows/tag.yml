@@ -27,6 +27,4 @@ jobs:
           uses: mathieudutour/github-tag-action@v6.0
           with:
             github_token: ${{ secrets.GITHUB_TOKEN }}
-            # default to patch releases (we will only patch this repo as we eventually want to deprecate)
-            default_bump: patch
             custom_tag:  ${{ steps.version_extract.outputs.version }}
