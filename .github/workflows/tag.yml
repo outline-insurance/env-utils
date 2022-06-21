@@ -1,0 +1,30 @@
+on:
+  push:
+    branches:
+      - production
+  
+name: Tag new version of Env-Utils
+
+jobs:
+    tag:
+        name: Tag New Version
+        runs-on: [ubuntu-latest]
+        timeout-minutes: 15
+
+        steps:
+        - name: Checkout
+          # From: https://github.com/actions/checkout
+          uses: actions/checkout@v2
+        
+        - name: Extract Tag
+          id: version_extract
+          run: |
+            echo "::set-output name=version::$(cat version.txt)"
+
+        - name: Bump Version and Push New Tag
+          id: tag_version
+          # From: https://github.com/marketplace/actions/github-tag
+          uses: mathieudutour/github-tag-action@v6.0
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            custom_tag:  ${{ steps.version_extract.outputs.version }}

@@ -1,0 +1,24 @@
+build:
+  main: cmd/root
+  binary: env-utils
+  ldflags: -s -w -X github.com/outline-insurance/env-utils/cmd/root/version.Version={{.Tag}}
+  signs:
+    - artifacts: checksum
+      args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "--detach-sign", "${artifact}"]
+  goos:
+    - darwin
+    - linux
+    - windows
+    - freebsd
+    - netbsd
+    - openbsd
+  goarch:
+    - amd64
+    - 386
+    - arm64
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^refactor'
