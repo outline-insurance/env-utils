@@ -1,9 +1,8 @@
 on:
   push:
-    # only run when new tag is created
-    tags:
-      - '*'
-  
+    branches:
+      - production
+
 name: Release Env-Utils
 
 jobs:
