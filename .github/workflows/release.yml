@@ -25,6 +25,45 @@ jobs:
           with:
             go-version: '1.18'
 
+        - name: Configure DEV AWS credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.DEV_AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}
+            aws-region: us-east-1
+
+        - name: Build and Test
+          id: build 
+          env:
+            GIT_SHA: ${{ github.sha }}
+          run: |
+            echo "building package"
+            go install .
+            go build
+            echo "package built"
+            echo "running go tests"
+            go test -v ./...
+            echo "testing command line functionality"
+
+            # Test secret functionality.
+            ./env-utils secret populate "sample/secret.jsonc" -r "us-east-2"
+            ./diff_test.sh .secret_env sample/.secret_env
+            
+            ./env-utils secret populate -l "sample/secret.jsonc" -r "us-east-2"
+            ./diff_test.sh .secret_env sample/.secret_env_local
+
+            # Test non-secret functionality.
+            ./env-utils non-secret populate "sample/non-secret.jsonc"
+            ./diff_test.sh .non_secret_env sample/.non_secret_env
+            
+            ./env-utils non-secret populate -l "sample/non-secret.jsonc"
+            ./diff_test.sh .non_secret_env sample/.non_secret_env_local
+
+            echo "finished testing command line functionality"
+
+            echo "testing that version file is updated"
+            ./version.sh version.txt production/version.txt
+
         - name: Import GPG key
           id: import_gpg
           uses: crazy-max/ghaction-import-gpg@v5
