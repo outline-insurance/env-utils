@@ -1,5 +1,5 @@
 build:
-  main: main
+  main: main.go
   binary: env-utils
   ldflags: -s -w -X github.com/outline-insurance/env-utils/main/version.Version={{.Tag}}
   goos:
