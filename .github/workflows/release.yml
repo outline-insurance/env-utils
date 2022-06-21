@@ -19,116 +19,26 @@ jobs:
           # needed for gorealease action to function correctly
           with:
             fetch-depth: 0
+
         - name: Setup Go
-          uses: actions/setup-go@v2
+          uses: actions/setup-go@v3
           with:
             go-version: '1.18'
+
+        - name: Import GPG key
+          id: import_gpg
+          uses: crazy-max/ghaction-import-gpg@v5
+          with:
+            gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+            passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
         - name: Run GoReleaser
           # From: https://github.com/marketplace/actions/goreleaser-action
           uses: goreleaser/goreleaser-action@v2
           with:
             distribution: goreleaser
-            version: latest
+            version: v3.0.0
             args: release --rm-dist
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-
-
-# on:
-#   push:
-#     branches:
-#       - production
-  
-# name: Build and Release env-utils
-
-# jobs:
-#     build_and_test:
-#         name: build and test
-#         runs-on: [ubuntu-18.04]
-#         timeout-minutes: 15
-
-#         steps:
-#         - name: Checkout
-#           # From: https://github.com/actions/checkout
-#           uses: actions/checkout@v2
-        
-#         - name: Configure DEV AWS credentials
-#           uses: aws-actions/configure-aws-credentials@v1
-#           with:
-#             aws-access-key-id: ${{ secrets.DEV_AWS_ACCESS_KEY_ID }}
-#             aws-secret-access-key: ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}
-#             aws-region: us-east-1
-        
-#         - name: Login to Amazon ECR
-#           id: login-ecr
-#           # From: https://github.com/aws-actions/amazon-ecr-login
-#           uses: aws-actions/amazon-ecr-login@v1
-
-#         - name: Build and Test
-#           id: build 
-#           env:
-#             # https://help.github.com/en/actions/automating-your-workflow-with-github-actions/contexts-and-expression-syntax-for-github-actions#contexts
-#             ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-#             ECR_REPOSITORY: outline-app-base-slim
-#             # TODO: @gbooth27: change this back to latest once we release go for real on outline2.0 
-#             IMAGE_TAG: latest-16
-#           run: |
-#             # need to make sure that we package the node modules with the lambdas
-#             echo "installing package"
-#             go install .
-#             echo "package installed"
-#             go build
-#             echo "package built"
-#             echo "running go tests"
-#             go test -v ./...
-#             echo "testing command line functionality"
-
-#             # Test secret functionality.
-#             ./env-utils secret populate "sample/secret.jsonc" -r "us-east-2"
-#             ./diff_test.sh .secret_env sample/.secret_env
-
-#             ./env-utils secret populate -l "sample/secret.jsonc" -r "us-east-2"
-#             ./diff_test.sh .secret_env sample/.secret_env_local
-
-#             # Test non-secret functionality.
-#             ./env-utils non-secret populate "sample/non-secret.jsonc"
-#             ./diff_test.sh .non_secret_env sample/.non_secret_env
-
-#             ./env-utils non-secret populate -l "sample/non-secret.jsonc"
-#             ./diff_test.sh .non_secret_env sample/.non_secret_env_local
-
-#             echo "finished testing command line functionality"
-#             rm env-utils
-
-#             echo "building for cypress-based release"
-#             export DIRECTORY=$(pwd)
-#             docker pull cypress/included:9.5.2
-#             docker run -v $DIRECTORY:/volume --entrypoint /volume/build-entrypoint.sh cypress/included:9.5.2
-#             mv env-utils env-utils-cypress
-#             echo "finished building for cypress-based release"
-
-#             echo "building for debian-based release"
-#             export DIRECTORY=$(pwd)
-#             docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-#             docker run -v $DIRECTORY:/volume $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG /bin/bash /volume/build-entrypoint.sh
-#             echo "finished building for debian-based release"
-
-#             export VERSION=$(cat version.txt)
-
-#             echo "::set-output name=tag::$VERSION"
-        
-#         - name: Production Binary Release
-#           if: github.ref == 'refs/heads/production'
-#           # From: https://github.com/marketplace/actions/automatic-releases
-#           uses: "marvinpinto/action-automatic-releases@latest"
-#           with:
-#             repo_token: "${{ secrets.GITHUB_TOKEN }}"
-#             automatic_release_tag: ${{ steps.build.outputs.tag }}
-#             prerelease: false 
-#             title: ${{ steps.build.outputs.tag }}
-#             files: |
-#               env-utils
-#               env-utils-cypress
+            GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}

@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - production
-      - graham/test-new-release
   
 name: Tag new version of Env-Utils
 
@@ -31,4 +30,3 @@ jobs:
             # default to patch releases (we will only patch this repo as we eventually want to deprecate)
             default_bump: patch
             custom_tag:  ${{ steps.version_extract.outputs.version }}
-            dry_run: true
