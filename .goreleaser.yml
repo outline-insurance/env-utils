@@ -1,0 +1,20 @@
+build:
+  main: cmd/root
+  binary: env-utils
+  ldflags: -s -w -X github.com/outline-insurance/apex/cmd/apex/version.Version={{.Tag}}
+  goos:
+    - darwin
+    - linux
+    - windows
+    - freebsd
+    - netbsd
+    - openbsd
+  goarch:
+    - amd64
+    - 386
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^refactor'
