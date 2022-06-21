@@ -84,9 +84,6 @@ jobs:
 
             echo "finished testing command line functionality"
 
-            echo "testing that version file is updated"
-            ./version.sh version.txt production/version.txt
-
         - name: Import GPG key
           id: import_gpg
           uses: crazy-max/ghaction-import-gpg@v5
