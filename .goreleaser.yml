@@ -1,10 +1,7 @@
 build:
-  main: cmd/root
+  main: main
   binary: env-utils
-  ldflags: -s -w -X github.com/outline-insurance/env-utils/cmd/root/version.Version={{.Tag}}
-  signs:
-    - artifacts: checksum
-      args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "--detach-sign", "${artifact}"]
+  ldflags: -s -w -X github.com/outline-insurance/env-utils/main/version.Version={{.Tag}}
   goos:
     - darwin
     - linux
@@ -16,6 +13,9 @@ build:
     - amd64
     - 386
     - arm64
+signs:
+  - artifacts: checksum
+    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "--detach-sign", "${artifact}"]
 changelog:
   sort: asc
   filters:
