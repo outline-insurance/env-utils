@@ -122,7 +122,6 @@ jobs:
             GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
         
         - name: Production Binary Release
-          if: github.ref == 'refs/heads/production'
           # From: https://github.com/marketplace/actions/automatic-releases
           uses: "marvinpinto/action-automatic-releases@latest"
           with:
