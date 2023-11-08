@@ -1,40 +1,21 @@
-version: 1
+build:
+  main: main.go
+  id: "env-utils-go"
+  binary: env-utils
+  builder: go
+  ldflags: -s -w -X github.com/outline-insurance/env-utils/main/version.Version={{.Tag}}
+  goos:
+    - darwin
+    - linux
+    - windows
+    - freebsd
+    - netbsd
+    - openbsd
+  goarch:
+    - amd64
+    - '386'
+    - arm64
 
-builds:
-  - main: main.go
-    id: "env-utils-go"
-    binary: env-utils
-    builder: go
-    ldflags: -s -w -X github.com/outline-insurance/env-utils/main/version.Version={{.Tag}}
-    goos:
-      - darwin
-      - linux
-      - windows
-      - freebsd
-      - netbsd
-      - openbsd
-    goarch:
-      - amd64
-      - '386'
-      - arm64
-      
-  - main: main.go
-    id: "env-utils-prebuilt"
-    binary: env-utils-prebuilt
-    builder: prebuilt
-    ldflags: -s -w -X github.com/outline-insurance/env-utils/main/version.Version={{.Tag}}
-    goos:
-      - darwin
-      - linux
-      - windows
-      - freebsd
-      - netbsd
-      - openbsd
-    goarch:
-      - amd64
-      - '386'
-      - arm64
-    
 signs:
   - artifacts: checksum
     args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "--detach-sign", "${artifact}"]

@@ -54,10 +54,19 @@ jobs:
             aws-secret-access-key: ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}
             aws-region: us-east-1
 
+        - name: Login to Amazon ECR
+          id: login-ecr
+          # From: https://github.com/aws-actions/amazon-ecr-login
+          uses: aws-actions/amazon-ecr-login@v1
+
         - name: Build and Test
           id: build 
           env:
             GIT_SHA: ${{ github.sha }}
+            # https://help.github.com/en/actions/automating-your-workflow-with-github-actions/contexts-and-expression-syntax-for-github-actions#contexts
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            ECR_REPOSITORY: outline-app-base-slim
+            IMAGE_TAG: latest-20
           run: |
             echo "building package"
             go install .
@@ -83,6 +92,16 @@ jobs:
 
             echo "finished testing command line functionality"
 
+            echo "building for debian-based release"
+            export DIRECTORY=$(pwd)
+            docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+            docker run -v $DIRECTORY:/volume $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG /bin/bash /volume/build-entrypoint.sh
+            echo "finished building for debian-based release"
+
+            export VERSION=$(cat version.txt)
+
+            echo "::set-output name=tag::$VERSION"
+
         - name: Import GPG key
           id: import_gpg
           uses: crazy-max/ghaction-import-gpg@v5
@@ -96,8 +115,20 @@ jobs:
           with:
             distribution: goreleaser
             # This version: https://github.com/goreleaser/goreleaser/releases
-            version: v1.22.0
+            version: v1.9.2
             args: release --rm-dist
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
+        
+        - name: Production Binary Release
+          if: github.ref == 'refs/heads/production'
+          # From: https://github.com/marketplace/actions/automatic-releases
+          uses: "marvinpinto/action-automatic-releases@latest"
+          with:
+            repo_token: "${{ secrets.GITHUB_TOKEN }}"
+            automatic_release_tag: ${{ steps.build.outputs.tag }}
+            prerelease: false 
+            title: ${{ steps.build.outputs.tag }}
+            files: |
+              env-utils
