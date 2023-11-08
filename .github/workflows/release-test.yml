@@ -95,7 +95,7 @@ jobs:
             echo "building for debian-based release"
             export DIRECTORY=$(pwd)
             docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-            docker run -v $DIRECTORY:/volume $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG /bin/bash /volume/build-entrypoint.sh
+            docker run -v $DIRECTORY:/volume $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG /bin/bash
             echo "finished building for debian-based release"
 
             export VERSION=$(cat version.txt)
