@@ -100,7 +100,7 @@ jobs:
 
             export VERSION=$(cat version.txt)
 
-            echo "::set-output name=tag::v$VERSION"
+            echo "::set-output name=tag::v$VERSION-prebuilt"
 
         - name: Import GPG key
           id: import_gpg
