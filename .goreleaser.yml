@@ -1,8 +1,6 @@
 build:
   main: main.go
-  id: "env-utils-go"
   binary: env-utils
-  builder: go
   ldflags: -s -w -X github.com/outline-insurance/env-utils/main/version.Version={{.Tag}}
   goos:
     - darwin
@@ -13,7 +11,7 @@ build:
     - openbsd
   goarch:
     - amd64
-    - '386'
+    - 386
     - arm64
 
 signs:
