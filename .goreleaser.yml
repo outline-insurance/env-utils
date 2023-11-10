@@ -13,9 +13,11 @@ build:
     - amd64
     - 386
     - arm64
+
 signs:
   - artifacts: checksum
     args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "--detach-sign", "${artifact}"]
+    
 changelog:
   sort: asc
   filters:
